@@ -21,7 +21,7 @@ args = tyro.cli(ArgumentConfig)
 inference_cfg = partial_fields(InferenceConfig, args.__dict__)
 crop_cfg = partial_fields(CropConfig, args.__dict__)
 
-# inference_cfg.flag_do_torch_compile = True
+inference_cfg.flag_do_torch_compile = True
 
 live_portrait_pipeline = LivePortraitPipeline(
     inference_cfg=inference_cfg,
@@ -109,6 +109,7 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         try:
             data = await websocket.receive_bytes()
+            start = time.time()
             # 在这里进行图像处理
             img_array = np.array(Image.open(io.BytesIO(data)))
             # print(img_array.shape)
@@ -116,7 +117,7 @@ async def websocket_endpoint(websocket: WebSocket):
             img_io = io.BytesIO()
             Image.fromarray(processed_img).save(img_io, 'JPEG')
             img_io.seek(0)
-
+            print('Inference time:', time.time() - start)
             await websocket.send_bytes(img_io.getvalue())
         except Exception as e:
             print(f"Error: {e}")
