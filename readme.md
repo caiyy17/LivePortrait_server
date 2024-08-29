@@ -19,16 +19,19 @@
 <div align='center'>
     <small><sup>†</sup> Corresponding author</small>
 </div>
-
 <br>
+
 <div align="center">
   <!-- <a href='LICENSE'><img src='https://img.shields.io/badge/license-MIT-yellow'></a> -->
   <a href='https://arxiv.org/pdf/2407.03168'><img src='https://img.shields.io/badge/arXiv-LivePortrait-red'></a>
   <a href='https://liveportrait.github.io'><img src='https://img.shields.io/badge/Project-LivePortrait-green'></a>
   <a href='https://huggingface.co/spaces/KwaiVGI/liveportrait'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a>
   <a href="https://github.com/KwaiVGI/LivePortrait"><img src="https://img.shields.io/github/stars/KwaiVGI/LivePortrait"></a>
+  <br>
+  <strong>English</strong> | <a href="./readme_zh_cn.md"><strong>简体中文</strong></a>
 </div>
 <br>
+
 
 <p align="center">
   <img src="./assets/docs/showcase2.gif" alt="showcase">
@@ -37,10 +40,12 @@
 </p>
 
 
-
 ## 🔥 Updates
+- **`2024/08/19`**: 🖼️ We support **image driven mode** and **regional control**. For details, see [**here**](./assets/docs/changelog/2024-08-19.md).
+- **`2024/08/06`**: 🎨 We support **precise portrait editing** in the Gradio interface, inspired by [ComfyUI-AdvancedLivePortrait](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait). See [**here**](./assets/docs/changelog/2024-08-06.md).
+- **`2024/08/05`**: 📦 Windows users can now download the [one-click installer](https://huggingface.co/cleardusk/LivePortrait-Windows/blob/main/LivePortrait-Windows-v20240806.zip) for Humans mode and **Animals mode** now! For details, see [**here**](./assets/docs/changelog/2024-08-05.md).
 - **`2024/08/02`**: 😸 We released a version of the **Animals model**, along with several other updates and improvements. Check out the details [**here**](./assets/docs/changelog/2024-08-02.md)!
-- **`2024/07/25`**: 📦 Windows users can now download the package from [HuggingFace](https://huggingface.co/cleardusk/LivePortrait-Windows/tree/main) or [BaiduYun](https://pan.baidu.com/s/1FWsWqKe0eNfXrwjEhhCqlw?pwd=86q2). Simply unzip and double-click `run_windows.bat` to enjoy!
+- **`2024/07/25`**: 📦 Windows users can now download the package from [HuggingFace](https://huggingface.co/cleardusk/LivePortrait-Windows/tree/main). Simply unzip and double-click `run_windows.bat` to enjoy!
 - **`2024/07/24`**: 🎨 We support pose editing for source portraits in the Gradio interface. We’ve also lowered the default detection threshold to increase recall. [Have fun](assets/docs/changelog/2024-07-24.md)!
 - **`2024/07/19`**: ✨ We support 🎞️ **portrait video editing (aka v2v)**! More to see [here](assets/docs/changelog/2024-07-19.md).
 - **`2024/07/17`**: 🍎 We support macOS with Apple Silicon, modified from [jeethu](https://github.com/jeethu)'s PR [#143](https://github.com/KwaiVGI/LivePortrait/pull/143).
@@ -57,6 +62,10 @@ We are actively updating and improving this repository. If you find any bugs or 
 
 ## Getting Started 🏁
 ### 1. Clone the code and prepare the environment 🛠️
+
+> [!Note]
+> Make sure your system has [`git`](https://git-scm.com/), [`conda`](https://anaconda.org/anaconda/conda), and [`FFmpeg`](https://ffmpeg.org/download.html) installed. For details on FFmpeg installation, see [**how to install FFmpeg**](assets/docs/how-to-install-ffmpeg.md).
+
 ```bash
 git clone https://github.com/KwaiVGI/LivePortrait
 cd LivePortrait
@@ -64,15 +73,38 @@ cd LivePortrait
 # create env using conda
 conda create -n LivePortrait python=3.9
 conda activate LivePortrait
+```
 
-# for Linux and Windows users
+#### For Linux or Windows Users
+[X-Pose](https://github.com/IDEA-Research/X-Pose) requires your `torch` version to be compatible with the CUDA version.
+
+Firstly, check your current CUDA version by:
+```bash
+nvcc -V # example versions: 11.1, 11.8, 12.1, etc.
+```
+
+Then, install the corresponding torch version. Here are examples for different CUDA versions. Visit the [PyTorch Official Website](https://pytorch.org/get-started/previous-versions) for installation commands if your CUDA version is not listed:
+```bash
+# for CUDA 11.1
+pip install torch==1.10.1+cu111 torchvision==0.11.2 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu111/torch_stable.html
+# for CUDA 11.8
+pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118
+# for CUDA 12.1
+pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu121
+# ...
+```
+
+Finally, install the remaining dependencies:
+```bash
 pip install -r requirements.txt
+```
+
+#### For macOS with Apple Silicon Users
+The [X-Pose](https://github.com/IDEA-Research/X-Pose) dependency does not support macOS, so you can skip its installation. While Humans mode works as usual, Animals mode is not supported. Use the provided requirements file for macOS with Apple Silicon:
+```bash
 # for macOS with Apple Silicon users
 pip install -r requirements_macOS.txt
 ```
-
-> [!Note]
-> Make sure your system has [`git`](https://git-scm.com/), [`conda`](https://anaconda.org/anaconda/conda), and [`FFmpeg`](https://ffmpeg.org/download.html) installed. For details on FFmpeg installation, see [**how to install FFmpeg**](assets/docs/how-to-install-ffmpeg.md).
 
 ### 2. Download pretrained weights 📥
 
@@ -89,7 +121,7 @@ export HF_ENDPOINT=https://hf-mirror.com
 huggingface-cli download KwaiVGI/LivePortrait --local-dir pretrained_weights --exclude "*.git*" "README.md" "docs"
 ```
 
-Alternatively, you can download all pretrained weights from [Google Drive](https://drive.google.com/drive/folders/1UtKgzKjFAOmZkhNK-OYT0caJ_w2XAnib) or [Baidu Yun](https://pan.baidu.com/s/1MGctWmNla_vZxDbEp2Dtzw?pwd=z5cn) (WIP). Unzip and place them in `./pretrained_weights`.
+Alternatively, you can download all pretrained weights from [Google Drive](https://drive.google.com/drive/folders/1UtKgzKjFAOmZkhNK-OYT0caJ_w2XAnib) or [Baidu Yun](https://pan.baidu.com/s/1MGctWmNla_vZxDbEp2Dtzw?pwd=z5cn). Unzip and place them in `./pretrained_weights`.
 
 Ensuring the directory structure is as or contains [**this**](assets/docs/directory-structure.md).
 
@@ -124,7 +156,7 @@ python inference.py -h
 ```
 
 #### Fast hands-on (animals) 🐱🐶
-Animals mode is ONLY tested on Linux with NVIDIA GPU.
+Animals mode is ONLY tested on Linux and Windows with NVIDIA GPU.
 
 You need to build an OP named `MultiScaleDeformableAttention` first, which is used by [X-Pose](https://github.com/IDEA-Research/X-Pose), a general keypoint detection framework.
 ```bash
@@ -150,7 +182,7 @@ If the script runs successfully, you will get an output mp4 file named `animatio
 > - Minimize shoulder movement.
 > - Make sure the first frame of driving video is a frontal face with **neutral expression**.
 
-Below is a auto-cropping case by `--flag_crop_driving_video`:
+Below is an auto-cropping case by `--flag_crop_driving_video`:
 ```bash
 python inference.py -s assets/examples/source/s9.jpg -d assets/examples/driving/d13.mp4 --flag_crop_driving_video
 ```
@@ -207,6 +239,7 @@ The results are [**here**](./assets/docs/speed.md).
 Discover the invaluable resources contributed by our community to enhance your LivePortrait experience:
 
 - [ComfyUI-LivePortraitKJ](https://github.com/kijai/ComfyUI-LivePortraitKJ) by [@kijai](https://github.com/kijai)
+- [ComfyUI-AdvancedLivePortrait](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait) by [@PowerHouseMan](https://github.com/PowerHouseMan).
 - [comfyui-liveportrait](https://github.com/shadowcz007/comfyui-liveportrait) by [@shadowcz007](https://github.com/shadowcz007)
 - [LivePortrait In ComfyUI](https://www.youtube.com/watch?v=aFcS31OWMjE) by [@Benji](https://www.youtube.com/@TheFutureThinker)
 - [LivePortrait hands-on tutorial](https://www.youtube.com/watch?v=uyjSTAOY7yI) by [@AI Search](https://www.youtube.com/@theAIsearch)
@@ -216,7 +249,10 @@ Discover the invaluable resources contributed by our community to enhance your L
 And many more amazing contributions from our community!
 
 ## Acknowledgements 💐
-We would like to thank the contributors of [FOMM](https://github.com/AliaksandrSiarohin/first-order-model), [Open Facevid2vid](https://github.com/zhanglonghao1992/One-Shot_Free-View_Neural_Talking_Head_Synthesis), [SPADE](https://github.com/NVlabs/SPADE), [InsightFace](https://github.com/deepinsight/insightface) repositories, for their open research and contributions.
+We would like to thank the contributors of [FOMM](https://github.com/AliaksandrSiarohin/first-order-model), [Open Facevid2vid](https://github.com/zhanglonghao1992/One-Shot_Free-View_Neural_Talking_Head_Synthesis), [SPADE](https://github.com/NVlabs/SPADE), [InsightFace](https://github.com/deepinsight/insightface) and [X-Pose](https://github.com/IDEA-Research/X-Pose) repositories, for their open research and contributions.
+
+## Ethics Considerations 🛡️
+Portrait animation technologies come with social risks, particularly the potential for misuse in creating deepfakes. To mitigate these risks, it’s crucial to follow ethical guidelines and adopt responsible usage practices. At present, the synthesized results contain visual artifacts that may help in detecting deepfakes. Please note that we do not assume any legal responsibility for the use of the results generated by this project.
 
 ## Citation 💖
 If you find LivePortrait useful for your research, welcome to 🌟 this repo and cite our work using the following BibTeX:
